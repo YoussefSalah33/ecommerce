@@ -1,11 +1,10 @@
+
+import 'package:ecommerce/model/model.dart';
 import 'package:ecommerce/model/realm_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ecommerce/model/product_model.dart';
 import 'package:realm/realm.dart';
 
-// 1. نموذج Realm للمنتج
-
-
+/// 1. Realm Model
 @RealmModel()
 class _RealmProduct {
   late int id;
@@ -15,13 +14,13 @@ class _RealmProduct {
   late String category;
 }
 
-// 2. موفر Realm
+/// 2. Realm Provider
 final realmProvider = Provider<Realm>((ref) {
   final config = Configuration.local([RealmProduct.schema]);
   return Realm(config);
 });
 
-// 3. موفر سلة التسوق
+/// 3. Cart Provider
 final cartProvider = StateNotifierProvider<CartNotifier, List<Product>>((ref) {
   return CartNotifier();
 });
@@ -30,16 +29,23 @@ class CartNotifier extends StateNotifier<List<Product>> {
   CartNotifier() : super([]);
 
   void addToCart(Product product) {
-    state = [...state, product];
+    if (!state.any((p) => p.id == product.id)) {
+      state = [...state, product];
+    }
   }
 
   void removeFromCart(int productId) {
     state = state.where((p) => p.id != productId).toList();
   }
+
+  void clearCart() {
+    state = [];
+  }
 }
 
-
-final favoritesProvider = StateNotifierProvider<FavoritesNotifier, List<Product>>((ref) {
+/// 4. Favorites Provider
+final favoritesProvider =
+    StateNotifierProvider<FavoritesNotifier, List<Product>>((ref) {
   return FavoritesNotifier();
 });
 
@@ -47,8 +53,19 @@ class FavoritesNotifier extends StateNotifier<List<Product>> {
   FavoritesNotifier() : super([]);
 
   void toggleFavorite(Product product) {
-    state.contains(product)
-        ? state = state.where((p) => p.id != product.id).toList()
-        : state = [...state, product];
+    final isFavorite = state.any((p) => p.id == product.id);
+    if (isFavorite) {
+      state = state.where((p) => p.id != product.id).toList();
+    } else {
+      state = [...state, product];
+    }
+  }
+
+  bool isFavorite(Product product) {
+    return state.any((p) => p.id == product.id);
+  }
+
+  void clearFavorites() {
+    state = [];
   }
 }

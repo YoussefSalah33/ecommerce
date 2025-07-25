@@ -1,8 +1,14 @@
+
+
+
 import 'dart:ui';
 
+import 'package:ecommerce/model/model.dart';
+import 'package:ecommerce/services/cart_service.dart';
+import 'package:ecommerce/services/favourite_service.dart';
 import 'package:ecommerce/services/product_dio.dart';
+import 'package:ecommerce/view/screens/details.dart';
 import 'package:flutter/material.dart';
-import 'package:ecommerce/model/product_model.dart';
 
 class CategoryProductsPage extends StatefulWidget {
   final String categoryName;
@@ -46,16 +52,32 @@ class _CategoryProductsPageState extends State<CategoryProductsPage> {
   }
 
   void addToCart(Product product) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('${product.title} added to cart')),
-    );
-  }
+  CartService.addToCart(product);
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(content: Text('${product.title} added to cart')),
+  );
+}
 
-  void addToFavorite(Product product) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('${product.title} added to favorites')),
-    );
-  }
+void addToFavorite(Product product) {
+  setState(() {
+    product.isFavorite = !product.isFavorite;
+    if (product.isFavorite) {
+      FavoriteService.addToFavorites(product);
+    } else {
+      FavoriteService.removeFromFavorites(product);
+    }
+  });
+
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(
+        product.isFavorite
+            ? '${product.title} added to favorites'
+            : '${product.title} removed from favorites',
+      ),
+    ),
+  );
+}
 
   void filterProducts(String query) {
     setState(() {
@@ -105,50 +127,64 @@ class _CategoryProductsPageState extends State<CategoryProductsPage> {
                             mainAxisSpacing: 10,
                           ),
                           itemCount: displayedProducts.length,
-                          itemBuilder: (context, index) {
-                            final product = displayedProducts[index];
-                            return Card(
-                              elevation: 4,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Expanded(
-                                    child: Image.network(
-                                      product.thumbnail,
-                                      fit: BoxFit.cover,
-                                      width: double.infinity,
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(4),
-                                    child: Text(
-                                      product.title,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 4),
-                                    child: Text('\$${product.price.toStringAsFixed(2)}'),
-                                  ),
-                                  ButtonBar(
-                                    alignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      IconButton(
-                                        icon: const Icon(Icons.favorite_border),
-                                        onPressed: () => addToFavorite(product),
-                                      ),
-                                      IconButton(
-                                        icon: const Icon(Icons.shopping_cart_outlined),
-                                        onPressed: () => addToCart(product),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
+                        itemBuilder: (context, index) {
+                      final product = displayedProducts[index];
+
+  return GestureDetector(
+     onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => Details(product: product),
+                            ),
+                          );
+                        },
+    child: Card(
+      elevation: 4,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Image.network(
+              product.thumbnail,
+              fit: BoxFit.cover,
+              width: double.infinity,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(4),
+            child: Text(
+              product.title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: Text('\$${product.price.toStringAsFixed(2)}'),
+          ),
+          Row(
+            mainAxisAlignment:  MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+  icon: Icon(
+    product.isFavorite ? Icons.favorite : Icons.favorite_border,
+    color: product.isFavorite ? Colors.red : null,
+  ),
+  onPressed: () => addToFavorite(product),
+),
+              IconButton(
+                icon: const Icon(Icons.shopping_cart_outlined),
+                onPressed: () => addToCart(product),
+              ),
+            ],
+          ),
+        ],
+      ),
+    ),
+  );
+}
                         ),
                       ),
                     ),

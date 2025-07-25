@@ -1,8 +1,10 @@
 import 'package:ecommerce/states/app_state.dart';
+import 'package:ecommerce/view/screens/cart_screen.dart';
+import 'package:ecommerce/view/screens/favourite_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ecommerce/view/screens/home.dart';
-import 'package:ecommerce/model/realm_model.dart'; // تأكد من وجود هذا السطر
+import 'package:ecommerce/model/realm_model.dart';
 import 'package:realm/realm.dart';
 
 void main() async {
@@ -34,6 +36,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
        routes: {
     '/home': (context) => const HomeScreen(),
+    '/favouritepage':(context) => const FavoritesPage(),
+    '/cartpage' :(context) => const CartPage(),
     
   },
       theme: ThemeData(useMaterial3: true),

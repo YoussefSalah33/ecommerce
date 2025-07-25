@@ -10,21 +10,31 @@ class CustomButtonBar extends ConsumerWidget {
     final cartCount = ref.watch(cartProvider).length;
 
     return BottomNavigationBar(
+      backgroundColor: const Color.fromARGB(255, 16, 78, 129),
+
+       selectedItemColor: const Color.fromARGB(255, 0, 0, 0),     
+       unselectedItemColor: const Color.fromARGB(255, 255, 255, 255),  
+
       items: [
-        const BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-        const BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
+        const BottomNavigationBarItem(
+          
+          icon: Icon(
+            Icons.home,
+          
+            ),
+             label: 'Home' ,
+             ),
+        const BottomNavigationBarItem(icon: Icon(Icons.favorite,), label: 'favourite'),
         BottomNavigationBarItem(
-          icon: Badge(
-            label: Text('$cartCount'),
-            child: const Icon(Icons.shopping_cart),
-          ),
+          icon: const Icon(Icons.shopping_cart,),
           label: 'Cart',
         ),
       ],
+      
       onTap: (index) {
         if (index == 0) Navigator.pushNamed(context, '/home');
-        if (index == 1) Navigator.pushNamed(context, '/search');
-        if (index == 2) Navigator.pushNamed(context, '/cart');
+        if (index == 1) Navigator.pushNamed(context, '/favouritepage');
+        if (index == 2) Navigator.pushNamed(context, '/cartpage');
       },
     );
   }

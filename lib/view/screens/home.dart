@@ -17,12 +17,11 @@ class _HomeScreenState extends State<HomeScreen> {
   int imageIndex = 0;
   late Timer _timer;
   final List<String> _images = [
-    'assets/image1.jpg',
-    'assets/image2.jpg',
-    'assets/image3.jpg',
-    'assets/image4.jpg',
-    'assets/image5.jpg',
-    'assets/image6.jpg',
+    'assets/b1.jpg',
+    'assets/b2.jpg',
+    'assets/b3.jpg',
+    'assets/b4.jpg',
+  
   ];
 
   List<CategoryModel> categories = [];
@@ -80,7 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: const Color.fromARGB(255, 15, 52, 82),
       appBar: const CustomAppBar(),
       body: Padding(
         padding: const EdgeInsets.all(10),
@@ -114,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const Text(
               'Product Categories',
               style: TextStyle(
-                color: Color.fromARGB(255, 251, 0, 0),
+                color: Color.fromARGB(255, 255, 255, 255),
                 fontSize: 20,
                  fontWeight: FontWeight.bold
                  ),
@@ -148,7 +147,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: RefreshIndicator(
                   onRefresh: loadCategories,
                   child: GridView.builder(
-                    physics: const BouncingScrollPhysics(), // تبطئة السكرول قليلاً
+                    physics: const BouncingScrollPhysics(  ), 
                     itemCount: categories.length,
                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
@@ -170,7 +169,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         },
                         child: Card(
-                          color: Colors.grey,
+                          color: const Color.fromARGB(255, 62, 105, 110),
                           elevation: 3,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -184,7 +183,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.black,
+                                  color:Color.fromARGB(255, 255, 255, 255),
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
@@ -199,7 +198,9 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
+      
       bottomNavigationBar: const CustomButtonBar(),
+      
     );
   }
 }
